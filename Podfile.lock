@@ -1,0 +1,28 @@
+PODS:
+  - AppAuth (0.92.0)
+  - GTMAppAuth (0.7.0):
+    - AppAuth (~> 0.92.0)
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.15):
+    - GTMSessionFetcher/Full (= 1.1.15)
+  - GTMSessionFetcher/Core (1.1.15)
+  - GTMSessionFetcher/Full (1.1.15):
+    - GTMSessionFetcher/Core (= 1.1.15)
+
+DEPENDENCIES:
+  - GTMAppAuth
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AppAuth
+    - GTMAppAuth
+    - GTMSessionFetcher
+
+SPEC CHECKSUMS:
+  AppAuth: 3f4f1d6d85ad631d0bbf15ffcdc10c447face97a
+  GTMAppAuth: 8d724be29ab8f2f6d35b2bf929d76340c9d1f1b1
+  GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
+
+PODFILE CHECKSUM: 9334502aba44f9526d42a8989abc6666dbdbe2cd
+
+COCOAPODS: 1.5.3

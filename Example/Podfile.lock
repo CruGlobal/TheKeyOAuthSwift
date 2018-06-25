@@ -1,0 +1,27 @@
+PODS:
+  - Nimble (7.0.3)
+  - Quick (1.2.0)
+  - TheKeyOAuthSwift (0.1.0)
+
+DEPENDENCIES:
+  - Nimble (~> 7.0.2)
+  - Quick (~> 1.2.0)
+  - TheKeyOAuthSwift (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  TheKeyOAuthSwift:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  TheKeyOAuthSwift: 6b2fbfac21635d39790cc33f5122dc843d95ad77
+
+PODFILE CHECKSUM: 26abfad90e1611898c2e0713b8327f4281edba10
+
+COCOAPODS: 1.5.3
