@@ -1,15 +1,29 @@
 PODS:
+  - AppAuth (0.92.0)
+  - GTMAppAuth (0.7.0):
+    - AppAuth (~> 0.92.0)
+    - GTMSessionFetcher (~> 1.1)
+  - GTMSessionFetcher (1.1.15):
+    - GTMSessionFetcher/Full (= 1.1.15)
+  - GTMSessionFetcher/Core (1.1.15)
+  - GTMSessionFetcher/Full (1.1.15):
+    - GTMSessionFetcher/Core (= 1.1.15)
   - Nimble (7.0.3)
   - Quick (1.2.0)
-  - TheKeyOAuthSwift (0.1.0)
+  - TheKeyOAuthSwift (0.1.0):
+    - GTMAppAuth
 
 DEPENDENCIES:
+  - GTMAppAuth
   - Nimble (~> 7.0.2)
   - Quick (~> 1.2.0)
   - TheKeyOAuthSwift (from `../`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - AppAuth
+    - GTMAppAuth
+    - GTMSessionFetcher
     - Nimble
     - Quick
 
@@ -18,10 +32,13 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
+  AppAuth: 3f4f1d6d85ad631d0bbf15ffcdc10c447face97a
+  GTMAppAuth: 8d724be29ab8f2f6d35b2bf929d76340c9d1f1b1
+  GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
-  TheKeyOAuthSwift: 6b2fbfac21635d39790cc33f5122dc843d95ad77
+  TheKeyOAuthSwift: a0920480ff0dcecba9ef9a197eb68572062adccd
 
-PODFILE CHECKSUM: 26abfad90e1611898c2e0713b8327f4281edba10
+PODFILE CHECKSUM: 452d026e56c46ee598bb0063947adefe08aba0dc
 
 COCOAPODS: 1.5.3
