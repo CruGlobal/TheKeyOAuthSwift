@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4FD8263220E14154009F32EE /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 4FD8262A20E14154009F32EE /* .gitkeep */; };
+		4FD8263420E14154009F32EE /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 4FD8263120E14154009F32EE /* .gitkeep */; };
+		4FD8263820E14185009F32EE /* TheKeyOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */; };
 		4FE9BAA7A2F0B282AA59DD48 /* Pods_TheKeyOAuthSwift_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF82C6B9EFCCE8B8F518A062 /* Pods_TheKeyOAuthSwift_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
@@ -30,6 +33,9 @@
 /* Begin PBXFileReference section */
 		44CBB2F28BDA28DD18A3B170 /* Pods-TheKeyOAuthSwift_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Example/Pods-TheKeyOAuthSwift_Example.release.xcconfig"; sourceTree = "<group>"; };
 		4883C22D3A37477C7E2904B8 /* Pods-TheKeyOAuthSwift_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Tests/Pods-TheKeyOAuthSwift_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		4FD8262A20E14154009F32EE /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		4FD8263120E14154009F32EE /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheKeyOAuthClient.swift; sourceTree = "<group>"; };
 		5F7E6189B2F214656F9F0206 /* Pods_TheKeyOAuthSwift_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TheKeyOAuthSwift_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* TheKeyOAuthSwift_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheKeyOAuthSwift_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -41,12 +47,12 @@
 		607FACE51AFB9204008FA782 /* TheKeyOAuthSwift_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TheKeyOAuthSwift_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		6AA2464ABA60540BE02B323D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		6AA2464ABA60540BE02B323D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		BBF4728221FA80026E4E03EB /* Pods-TheKeyOAuthSwift_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Example/Pods-TheKeyOAuthSwift_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D3E47A5D54C2F1B476E07EBE /* Pods-TheKeyOAuthSwift_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Tests/Pods-TheKeyOAuthSwift_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		E04F0429B883BCC51883BDA1 /* TheKeyOAuthSwift.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = TheKeyOAuthSwift.podspec; path = ../TheKeyOAuthSwift.podspec; sourceTree = "<group>"; };
+		E04F0429B883BCC51883BDA1 /* TheKeyOAuthSwift.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = TheKeyOAuthSwift.podspec; path = ../TheKeyOAuthSwift.podspec; sourceTree = "<group>"; };
 		EF82C6B9EFCCE8B8F518A062 /* Pods_TheKeyOAuthSwift_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TheKeyOAuthSwift_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		EFFB72B906FA1D22DAEDCD6A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		EFFB72B906FA1D22DAEDCD6A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +84,65 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4FD8262820E14154009F32EE /* TheKeyOAuthSwift */ = {
+			isa = PBXGroup;
+			children = (
+				4FD8262920E14154009F32EE /* Classes */,
+				4FD8262C20E14154009F32EE /* Pods */,
+				4FD8263020E14154009F32EE /* Assets */,
+			);
+			name = TheKeyOAuthSwift;
+			path = ../TheKeyOAuthSwift;
+			sourceTree = "<group>";
+		};
+		4FD8262920E14154009F32EE /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				4FD8262A20E14154009F32EE /* .gitkeep */,
+				4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		4FD8262C20E14154009F32EE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4FD8262D20E14154009F32EE /* Target Support Files */,
+				4FD8262E20E14154009F32EE /* Local Podspecs */,
+				4FD8262F20E14154009F32EE /* Headers */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		4FD8262D20E14154009F32EE /* Target Support Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Target Support Files";
+			sourceTree = "<group>";
+		};
+		4FD8262E20E14154009F32EE /* Local Podspecs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Local Podspecs";
+			sourceTree = "<group>";
+		};
+		4FD8262F20E14154009F32EE /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Headers;
+			sourceTree = "<group>";
+		};
+		4FD8263020E14154009F32EE /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4FD8263120E14154009F32EE /* .gitkeep */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		57DEAA2CC0AEFDED9455D65E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +157,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				4FD8262820E14154009F32EE /* TheKeyOAuthSwift */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for TheKeyOAuthSwift */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -248,7 +314,9 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
+				4FD8263420E14154009F32EE /* .gitkeep in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				4FD8263220E14154009F32EE /* .gitkeep in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +413,7 @@
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				4FD8263820E14185009F32EE /* TheKeyOAuthClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
