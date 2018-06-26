@@ -102,7 +102,7 @@ public class TheKeyOAuthClient {
         var request = URLRequest(url: attributesURL)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        let session = URLSession(configuration: .default)
+        let session = URLSession(configuration: .ephemeral)
         
         let task = session.dataTask(with: request) { (data, response, error) in
             if let data = data {
