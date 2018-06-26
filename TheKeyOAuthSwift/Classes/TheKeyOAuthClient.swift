@@ -31,9 +31,14 @@ public class TheKeyOAuthClient {
     public static let shared = TheKeyOAuthClient()
     
     // MARK: Public variables
-    public var userGUID: String? {
+    
+    public var userAttributes: [String: String]? {
         get {
-            return ""
+            guard isConfigured(), let authState = getValidAuthState(at: Date()) else { userAttributes = nil; return nil }
+            return userAttributes
+        }
+        set {
+            userAttributes = newValue
         }
     }
     
@@ -59,8 +64,7 @@ public class TheKeyOAuthClient {
     }
     
     public func isAuthenticated(at currentDateTime: Date = Date()) -> Bool {
-        guard let auth = GTMAppAuthFetcherAuthorization(fromKeychainForName: keychainName()) else { return false }
-        return isAuthorized(at: currentDateTime, authState: auth.authState)
+        return getValidAuthState(at: currentDateTime) != nil
     }
     
     public func initiateAuthorization(requestingViewController: UIViewController, currentDateTime: Date) -> OIDAuthorizationFlowSession? {
@@ -90,12 +94,16 @@ public class TheKeyOAuthClient {
         return authSession
     }
     
+    public func logout() {
+        self.userAttributes = nil
+        GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: self.keychainName())
+    }
+    
     public func fetchAttributes(result: @escaping ([String: String]?) -> Void) {
-        guard isConfigured() else { return }
-        guard let authorization = GTMAppAuthFetcherAuthorization(fromKeychainForName: self.keychainName()) else { return }
-        guard isAuthorized(at: Date(), authState: authorization.authState) else { return }
-        guard let accessToken = authorization.authState.lastTokenResponse?.accessToken else { return }
-        guard let baseURL = baseCasURL else { return }
+        guard isConfigured(),
+            let authState = getValidAuthState(at: Date()),
+            let accessToken = authState.lastTokenResponse?.accessToken,
+            let baseURL = baseCasURL else { return }
 
         let attributesURL = baseURL.appendingPathComponent(attributesPath.joined(separator: "/"))
         
@@ -108,6 +116,7 @@ public class TheKeyOAuthClient {
             if let data = data {
                 do {
                     guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else { return }
+                    self.userAttributes = json
                     result(json)
                 } catch { /* TODO: fill this in */ }
             }
@@ -119,6 +128,12 @@ public class TheKeyOAuthClient {
     }
     
     // MARK: Helper functions
+    
+    private func getValidAuthState(at currentDateTime: Date) -> OIDAuthState? {
+        guard let authorization = GTMAppAuthFetcherAuthorization(fromKeychainForName: self.keychainName()) else { return nil }
+        guard isAuthorized(at: Date(), authState: authorization.authState) else { return nil }
+        return authorization.authState
+    }
     
     private func isAuthorized(at currentDateTime: Date, authState: OIDAuthState) -> Bool {
         guard let accessTokenExpirationDate = authState.lastTokenResponse?.accessTokenExpirationDate else { return false }
