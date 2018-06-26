@@ -13,7 +13,7 @@ public class TheKeyOAuthClient {
     // MARK: Constants
     
     private static let kAuthorizationHeaderKey = "Authorization"
-    private static let kAuthorizationHeaderValue = "Bearer: %@"
+    private static let kAuthorizationHeaderValue = "Bearer %@"
     private static let kIssuerUnknown = "unknownApp"
     private static let kKeychainName = "org.cru.%@.authorization"
     private static let kGUIDKey = "ssoGuid"
@@ -135,7 +135,9 @@ public class TheKeyOAuthClient {
         let attributesURL = baseURL.appendingPathComponent(attributesPath.joined(separator: "/"))
         
         var request = URLRequest(url: attributesURL)
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        let bearerToken = String(format:TheKeyOAuthClient.kAuthorizationHeaderValue, accessToken)
+        
+        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
         
         let session = URLSession(configuration: .ephemeral)
         
