@@ -17,7 +17,7 @@ public class TheKeyOAuthClient {
     var baseCasURL: URL?
     
     private let loginPath = ["login"]
-    private let tokenPath = ["oauth","token"]
+    private let tokenPath = ["api","oauth","token"]
     private let scopes = ["extended", "fullticket"]
     private var configuration: OIDServiceConfiguration?
     
@@ -29,9 +29,12 @@ public class TheKeyOAuthClient {
         self.redirectURI = redirectURI
         self.issuer = issuer
         
+        let authorizationEndpoint: URL = baseCasURL.appendingPathComponent(loginPath.joined(separator: "/"))
+        let tokenEndpoint: URL = baseCasURL.appendingPathComponent(tokenPath.joined(separator: "/"))
+        
         configuration = OIDServiceConfiguration(
-            authorizationEndpoint: baseCasURL.appendingPathComponent(loginPath.joined(separator: "/")),
-            tokenEndpoint: baseCasURL.appendingPathComponent(tokenPath.joined(separator: "/"))
+            authorizationEndpoint: authorizationEndpoint,
+            tokenEndpoint: tokenEndpoint
         )
     }
     
@@ -39,7 +42,12 @@ public class TheKeyOAuthClient {
         return configuration != nil && baseCasURL != nil && clientID != nil && redirectURI != nil && issuer != nil
     }
     
-     public func doAuthorization(requestingViewController: UIViewController, currentDateTime: Date) -> OIDAuthorizationFlowSession? {
+    public func isAuthenticated(at currentDateTime: Date = Date()) -> Bool {
+        guard let auth = GTMAppAuthFetcherAuthorization(fromKeychainForName: keychainName()) else { return false }
+        return isAuthorized(at: currentDateTime, authState: auth.authState)
+    }
+    
+    public func doAuthorization(requestingViewController: UIViewController, currentDateTime: Date) -> OIDAuthorizationFlowSession? {
         guard isConfigured(),
             let clientID = clientID,
             let redirectURI = redirectURI,
@@ -47,24 +55,37 @@ public class TheKeyOAuthClient {
         
         let request = OIDAuthorizationRequest(configuration: configuration,
                                               clientId: clientID,
-                                              clientSecret: "", //TODO: get this value
+                                              clientSecret: nil,
                                               scopes: scopes,
                                               redirectURL: redirectURI,
                                               responseType: OIDResponseTypeCode,
                                               additionalParameters: nil)
         
         let authSession = OIDAuthState.authState(byPresenting: request, presenting: requestingViewController) { authState, error in
+            if let error = error {
+                debugPrint(error)
+                return
+            }
+            
             guard let authState = authState, authState.isAuthorized == true else { return }
             
-            guard let _ = authState.lastTokenResponse?.accessToken else { return /*no token*/ }
-            guard let accessTokenExpirationDate = authState.lastTokenResponse?.accessTokenExpirationDate,
-                accessTokenExpirationDate.compare(currentDateTime) == ComparisonResult.orderedDescending else { return /*expired token*/}
-                        
             let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
             
-            GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: "org.cru.\(self.issuer!)")
+            GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName())
+            GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: self.keychainName())
         }
         
         return authSession
+    }
+    
+    private func isAuthorized(at currentDateTime: Date, authState: OIDAuthState) -> Bool {
+        guard let accessTokenExpirationDate = authState.lastTokenResponse?.accessTokenExpirationDate else { return false }
+        return accessTokenExpirationDate.compare(currentDateTime) == ComparisonResult.orderedDescending
+    }
+    
+    private func keychainName() -> String {
+        let issuer = self.issuer ?? "unknownApp"
+        let keychainName = "org.cru.\(issuer).authorization"
+        return keychainName
     }
 }
