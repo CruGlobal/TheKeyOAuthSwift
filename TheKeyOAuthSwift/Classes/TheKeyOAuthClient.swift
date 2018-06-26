@@ -16,7 +16,7 @@ public class TheKeyOAuthClient {
     private static let kAuthorizationHeaderValue = "Bearer: %@"
     private static let kIssuerUnknown = "unknownApp"
     private static let kKeychainName = "org.cru.%@.authorization"
-    private static let kGUIDKey = "guid"
+    private static let kGUIDKey = "ssoGuid"
     private static let kEmailKey = "email"
     private static let kgrMasterPersonIdKey = "grMasterPersonId"
     
