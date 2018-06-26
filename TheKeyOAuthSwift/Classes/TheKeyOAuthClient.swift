@@ -10,6 +10,16 @@ import Foundation
 import GTMAppAuth
 
 public class TheKeyOAuthClient {
+    // MARK: Constants
+    
+    private static let kAuthorizationHeaderKey = "Authorization"
+    private static let kAuthorizationHeaderValue = "Bearer: %@"
+    private static let kIssuerUnknown = "unknownApp"
+    private static let kKeychainName = "org.cru.%@.authorization"
+    private static let kGUIDKey = "guid"
+    private static let kEmailKey = "email"
+    private static let kgrMasterPersonIdKey = "grMasterPersonId"
+    
     
     // MARK: Private variables
     
@@ -26,6 +36,8 @@ public class TheKeyOAuthClient {
     private let scopes = ["extended", "fullticket"]
     private var configuration: OIDServiceConfiguration?
     
+    private var userAttrs: [String: String]?
+    
     // MARK: Static singleton instance
     
     public static let shared = TheKeyOAuthClient()
@@ -34,11 +46,26 @@ public class TheKeyOAuthClient {
     
     public var userAttributes: [String: String]? {
         get {
-            guard isConfigured(), let authState = getValidAuthState(at: Date()) else { userAttributes = nil; return nil }
-            return userAttributes
+            guard isConfigured(), let authState = getValidAuthState(at: Date()) else { userAttrs = nil; return nil }
+            return userAttrs
         }
-        set {
-            userAttributes = newValue
+    }
+    
+    public var guid: String? {
+        get {
+            return userAttributes?[TheKeyOAuthClient.kGUIDKey]
+        }
+    }
+    
+    public var email: String? {
+        get {
+            return userAttributes?[TheKeyOAuthClient.kEmailKey]
+        }
+    }
+    
+    public var grMasterPersonId: String? {
+        get {
+            return userAttributes?[TheKeyOAuthClient.kgrMasterPersonIdKey]
         }
     }
     
@@ -95,7 +122,7 @@ public class TheKeyOAuthClient {
     }
     
     public func logout() {
-        self.userAttributes = nil
+        self.userAttrs = nil
         GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: self.keychainName())
     }
     
@@ -116,7 +143,7 @@ public class TheKeyOAuthClient {
             if let data = data {
                 do {
                     guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else { return }
-                    self.userAttributes = json
+                    self.userAttrs = json
                     result(json)
                 } catch { /* TODO: fill this in */ }
             }
@@ -141,8 +168,8 @@ public class TheKeyOAuthClient {
     }
     
     private func keychainName() -> String {
-        let issuer = self.issuer ?? "unknownApp"
-        let keychainName = "org.cru.\(issuer).authorization"
+        let issuer = self.issuer ?? TheKeyOAuthClient.kIssuerUnknown
+        let keychainName = String(format: TheKeyOAuthClient.kKeychainName, issuer)
         return keychainName
     }
 }
