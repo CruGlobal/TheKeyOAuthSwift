@@ -153,9 +153,10 @@ public class TheKeyOAuthClient {
     /* Fetches attributes for the logged in user. The user MUST have a valid, non-expired session. The function DOES account
        for refresh tokens. Retrieved attributes will be stored in userAttrs and a copy is returned in the result callback. */
     public func fetchAttributes(result: (([String: String]?, Error?) -> Void)?) {
-        guard isConfigured(), let authState = authState, let baseURL = baseCasURL else { return }
+        guard isConfigured(), let authState = authState else { return }
         
-        authState.performAction { (token, _, _) in
+        authState.performAction { (token, _, error) in
+            if error != nil { result?(nil, error); return }
             guard let token = token else { return }
             guard let request = self.buildAttributesRequest(with: token) else { return }
             
