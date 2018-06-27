@@ -144,8 +144,9 @@ public class TheKeyOAuthClient {
                 return
             }
             
-            guard let authState = authState, self.isAuthenticated(at: currentDateTime) else { return }
+            guard let authState = authState else { return }
             
+            self.authState = authState
             self.saveToKeychain(authState: authState)
             self.fetchAttributes()
         }
