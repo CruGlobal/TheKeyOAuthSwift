@@ -164,11 +164,9 @@ public class TheKeyOAuthClient {
             
             let task = session.dataTask(with: request) { (data, response, error) in
                 if let data = data {
-                    do {
-                        guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else { return }
-                        self.userAttrs = json
-                        result?(json, nil)
-                    } catch { result?(nil, error)}
+                    guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String] else { return }
+                    self.userAttrs = json
+                    result?(json, nil)
                 }
             }
             
