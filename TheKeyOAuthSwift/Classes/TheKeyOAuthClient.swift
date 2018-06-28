@@ -11,7 +11,8 @@ import GTMAppAuth
 
 public class TheKeyOAuthClient {
     // MARK: Constants
-    
+
+    private static let kDefaultBaseURL = URL("https://thekey.me/cas/")
     private static let kAuthorizationHeaderKey = "Authorization"
     private static let kAuthorizationHeaderValue = "Bearer %@"
     private static let kIssuerUnknown = "unknownApp"
@@ -81,8 +82,8 @@ public class TheKeyOAuthClient {
     
     /* Configures the client with values necessary to interact with TheKey. This function MUST
        be called before any subsequent calls should be expected to work. */
-    public func configure(baseCasURL: URL, clientID: String, redirectURI: URL, issuer: String) {
-        self.baseCasURL = baseCasURL
+    public func configure(baseCasURL: URL?, clientID: String, redirectURI: URL, issuer: String) {
+        self.baseCasURL = baseCasURL ?? TheKeyOAuthClient.kDefaultBaseURL
         self.clientID = clientID
         self.redirectURI = redirectURI
         self.issuer = issuer
