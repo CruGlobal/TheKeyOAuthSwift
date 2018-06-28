@@ -4,4 +4,5 @@ use_frameworks!
 
 target "TheKeyOAuthSwift" do
   pod 'GTMAppAuth'
+  pod 'Result', '~> 4.0.0'
 end
