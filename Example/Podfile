@@ -3,6 +3,7 @@ use_frameworks!
 target 'TheKeyOAuthSwift_Example' do
   pod 'TheKeyOAuthSwift', :path => '../'
   pod 'GTMAppAuth'
+  pod 'Result'
   
   target 'TheKeyOAuthSwift_Tests' do
     inherit! :search_paths

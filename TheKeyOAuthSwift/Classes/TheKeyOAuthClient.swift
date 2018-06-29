@@ -8,6 +8,7 @@
 
 import Foundation
 import GTMAppAuth
+import Result
 
 public class TheKeyOAuthClient {
     // MARK: Constants
@@ -197,31 +198,31 @@ public class TheKeyOAuthClient {
         }
     }
 
-    public func performActionWithTicket(forService service: String, completion: ((Result<String, Error>) -> Void)?)  {
-        guard isConfigured(), let authState = authState else { completion?(.failure(Error.notConfigured)); return }
+    public func performActionWithTicket(forService service: String, completion: ((Result<String, AnyError>) -> Void)?)  {
+        guard isConfigured(), let authState = authState else { completion?(.failure(AnyError(ApiError.notConfigured))); return }
 
         authState.performAction { (token, _, error) in
-            if error != nil { completion?(.failure(error)); return }
+            if let error = error { completion?(.failure(AnyError(error))); return }
 
-            guard let token = token else { completion?(.failure(ApiError.missingAccessToken)); return }
-            guard let request = self.buildTicketRequest(with: token, forService: service) else { completion?(.failure(ApiError.unableToBuildURL)); return }
+            guard let token = token else { completion?(.failure(AnyError(ApiError.missingAccessToken))); return }
+            guard let request = self.buildTicketRequest(with: token, forService: service) else { completion?(.failure(AnyError(ApiError.unableToBuildURL))); return }
 
             let session = URLSession(configuration: .ephemeral)
             let task = session.dataTask(with: request) { (data, response, error) in
-                if error != nil { completion?(.failure(error)); return }
+                if let error = error { completion?(.failure(AnyError(error))); return }
 
                 do {
                     if let data = data {
                         let json = try JSONSerialization.jsonObject(with: data) as? [String: String]
-                        completion?(Result(json?[TheKeyOAuthClient.kParamTicket], failWith: ApiError.invalidApiResponse))
+                        completion?(Result(json?[TheKeyOAuthClient.kParamTicket], failWith: AnyError(ApiError.invalidApiResponse)))
                         return
                     }
                 } catch {
-                    completion?(.failure(error))
+                    completion?(.failure(AnyError(error)))
                     return
                 }
 
-                completion?(.failure(ApiError.invalidApiResponse))
+                completion?(.failure(AnyError(ApiError.invalidApiResponse)))
                 return
             }
 
