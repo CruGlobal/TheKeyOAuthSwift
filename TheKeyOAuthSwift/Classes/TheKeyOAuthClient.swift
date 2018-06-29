@@ -247,8 +247,9 @@ public class TheKeyOAuthClient {
         guard var ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
         let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
         ticketURL.queryItems = [serviceParam]
-
-        var request = URLRequest(url: ticketURL.url)
+        guard let urlWIthParams = ticketURL.url else { return nil }
+        
+        var request = URLRequest(url: urlWIthParams)
         let bearerToken = String(format: TheKeyOAuthClient.kAuthorizationHeaderValue, token)
 
         request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
