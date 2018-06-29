@@ -12,7 +12,7 @@ import GTMAppAuth
 public class TheKeyOAuthClient {
     // MARK: Constants
 
-    private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")!
+    private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
     private static let kAttributesPath = "api/oauth/attributes"
     private static let kTicketPath = "api/oauth/ticket"
     private static let kAuthorizationHeaderKey = "Authorization"
@@ -100,8 +100,8 @@ public class TheKeyOAuthClient {
         self.redirectURI = redirectURI
         self.issuer = issuer
         
-        let authorizationEndpoint: URL = baseCasURL.appendingPathComponent(loginPath.joined(separator: "/"))
-        let tokenEndpoint: URL = baseCasURL.appendingPathComponent(tokenPath.joined(separator: "/"))
+        let authorizationEndpoint = baseCasURL!.appendingPathComponent(loginPath.joined(separator: "/"))
+        let tokenEndpoint = baseCasURL!.appendingPathComponent(tokenPath.joined(separator: "/"))
         
         configuration = OIDServiceConfiguration(
             authorizationEndpoint: authorizationEndpoint,
