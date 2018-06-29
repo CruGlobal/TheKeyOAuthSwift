@@ -20,8 +20,8 @@ public class TheKeyOAuthClient {
     private static let kAuthorizationHeaderValue = "Bearer %@"
     private static let kParamService = "service"
     private static let kParamTicket = "ticket"
-    private static let kIssuerUnknown = "unknownApp"
-    private static let kKeychainName = "org.cru.%@.authorization"
+    private static let kbundleUnknown = "org.cru.unknownApp"
+    private static let kKeychainName = "%@.thekey.authorization"
     private static let kGUIDKey = "ssoGuid"
     private static let kEmailKey = "email"
     private static let kgrMasterPersonIdKey = "grMasterPersonId"
@@ -30,7 +30,6 @@ public class TheKeyOAuthClient {
     
     private var clientID: String?
     private var redirectURI: URL?
-    private var issuer: String?
     private var baseCasURL: URL?
 
     private let scopes = ["extended", "fullticket"]
@@ -40,8 +39,8 @@ public class TheKeyOAuthClient {
 
     private var keychainName: String {
         get {
-            let issuer = self.issuer ?? TheKeyOAuthClient.kIssuerUnknown
-            let keychainName = String(format: TheKeyOAuthClient.kKeychainName, issuer)
+            let identifier = Bundle.main.bundleIdentifier ?? TheKeyOAuthClient.kbundleUnknown
+            let keychainName = String(format: TheKeyOAuthClient.kKeychainName, identifier)
             return keychainName
         }
     }
@@ -95,12 +94,11 @@ public class TheKeyOAuthClient {
     
     /* Configures the client with values necessary to interact with TheKey. This function MUST
        be called before any subsequent calls should be expected to work. */
-    public func configure(baseCasURL: URL?, clientID: String, redirectURI: URL, issuer: String) {
+    public func configure(baseCasURL: URL?, clientID: String, redirectURI: URL) {
         self.baseCasURL = baseCasURL ?? TheKeyOAuthClient.kDefaultBaseURL
         self.clientID = clientID
         self.redirectURI = redirectURI
-        self.issuer = issuer
-        
+
         let authorizationEndpoint = baseCasURL!.appendingPathComponent(loginPath.joined(separator: "/"))
         let tokenEndpoint = baseCasURL!.appendingPathComponent(tokenPath.joined(separator: "/"))
         
@@ -112,7 +110,7 @@ public class TheKeyOAuthClient {
     /* Returns true if the client is configured with the values necessary interact with TheKey.
        It is a safe assumption that if configure() is called then this function will return true. */
     public func isConfigured() -> Bool {
-        return configuration != nil && baseCasURL != nil && clientID != nil && redirectURI != nil && issuer != nil
+        return configuration != nil && baseCasURL != nil && clientID != nil && redirectURI != nil
     }
     
     /* Returns true if there is a valid authState, which may be loaded from the Keychain, and that authState has an
