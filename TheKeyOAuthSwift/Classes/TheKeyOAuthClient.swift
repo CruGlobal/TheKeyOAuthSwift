@@ -244,7 +244,7 @@ public class TheKeyOAuthClient {
 
     private func buildTicketRequest(with token: String, forService service: String) -> URLRequest? {
         guard let rawTicketURL = buildCasURL(with: TheKeyOAuthClient.kTicketPath) else { return nil }
-        guard let ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
+        guard var ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
         let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
         ticketURL.queryItems = [serviceParam]
 
