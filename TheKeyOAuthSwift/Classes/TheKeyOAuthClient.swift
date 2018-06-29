@@ -14,14 +14,21 @@ public class TheKeyOAuthClient {
     // MARK: Constants
 
     private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
+    
     private static let kAttributesPath = "api/oauth/attributes"
     private static let kTicketPath = "api/oauth/ticket"
+    private static let kTokenPath = "api/oauth/token"
+    private static let kLoginPath = "login"
+    
     private static let kAuthorizationHeaderKey = "Authorization"
     private static let kAuthorizationHeaderValue = "Bearer %@"
+    
     private static let kParamService = "service"
     private static let kParamTicket = "ticket"
+    
     private static let kbundleUnknown = "org.cru.unknownApp"
     private static let kKeychainName = "%@.thekey.authorization"
+    
     private static let kGUIDKey = "ssoGuid"
     private static let kEmailKey = "email"
     private static let kgrMasterPersonIdKey = "grMasterPersonId"
@@ -34,8 +41,7 @@ public class TheKeyOAuthClient {
 
     private let scopes = ["extended", "fullticket"]
 
-    private let loginPath = ["login"]
-    private let tokenPath = ["api","oauth","token"]
+
 
     private var keychainName: String {
         get {
@@ -99,8 +105,8 @@ public class TheKeyOAuthClient {
         self.clientID = clientID
         self.redirectURI = redirectURI
 
-        let authorizationEndpoint = baseCasURL!.appendingPathComponent(loginPath.joined(separator: "/"))
-        let tokenEndpoint = baseCasURL!.appendingPathComponent(tokenPath.joined(separator: "/"))
+        let authorizationEndpoint = baseCasURL!.appendingPathComponent(TheKeyOAuthClient.kLoginPath)
+        let tokenEndpoint = baseCasURL!.appendingPathComponent(TheKeyOAuthClient.kTokenPath)
         
         configuration = OIDServiceConfiguration(
             authorizationEndpoint: authorizationEndpoint,
