@@ -20,6 +20,23 @@ it, simply add the following line to your Podfile:
 pod 'TheKeyOAuthSwift'
 ```
 
+## Usage
+
+#### Get a CAS Ticket
+
+```swift
+TheKeyOAuthClient.shared.performActionWithTicket(forService: "https://service.example.com/") { (result) in
+  switch result {
+  	case let .success(ticket):
+  	  // do something with the ticket
+  	case .failure(TheKeyOAuthClient.ApiError.notConfigured)
+  	  // You should really configure the library before trying to use it
+  	case let .failure(error):
+  	  // handle the error as appropriate
+  }
+}
+```
+
 ## Author
 
 ryan.t.carlson@cru.org, ryan.t.carlson@cru.org

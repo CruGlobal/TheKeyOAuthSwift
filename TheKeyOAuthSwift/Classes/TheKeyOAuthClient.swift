@@ -11,9 +11,14 @@ import GTMAppAuth
 
 public class TheKeyOAuthClient {
     // MARK: Constants
-    
+
+    private static let kDefaultBaseURL = URL("https://thekey.me/cas/")
+    private static let kAttributesPath = "api/oauth/attributes"
+    private static let kTicketPath = "api/oauth/ticket"
     private static let kAuthorizationHeaderKey = "Authorization"
     private static let kAuthorizationHeaderValue = "Bearer %@"
+    private static let kParamService = "service"
+    private static let kParamTicket = "ticket"
     private static let kIssuerUnknown = "unknownApp"
     private static let kKeychainName = "org.cru.%@.authorization"
     private static let kGUIDKey = "ssoGuid"
@@ -31,8 +36,7 @@ public class TheKeyOAuthClient {
 
     private let loginPath = ["login"]
     private let tokenPath = ["api","oauth","token"]
-    private let attributesPath = ["api","oauth","attributes"]
-    
+
     private var keychainName: String {
         get {
             let issuer = self.issuer ?? TheKeyOAuthClient.kIssuerUnknown
@@ -45,6 +49,15 @@ public class TheKeyOAuthClient {
     
     private var authState: OIDAuthState?
     private var configuration: OIDServiceConfiguration?
+
+    // MARK: Errors we can throw/return
+
+    public enum ApiError: Error {
+        case notConfigured
+        case missingAccessToken
+        case unableToBuildURL
+        case invalidApiResponse
+    }
 
     // MARK: Static singleton instance
     
@@ -81,8 +94,8 @@ public class TheKeyOAuthClient {
     
     /* Configures the client with values necessary to interact with TheKey. This function MUST
        be called before any subsequent calls should be expected to work. */
-    public func configure(baseCasURL: URL, clientID: String, redirectURI: URL, issuer: String) {
-        self.baseCasURL = baseCasURL
+    public func configure(baseCasURL: URL?, clientID: String, redirectURI: URL, issuer: String) {
+        self.baseCasURL = baseCasURL ?? TheKeyOAuthClient.kDefaultBaseURL
         self.clientID = clientID
         self.redirectURI = redirectURI
         self.issuer = issuer
@@ -183,13 +196,44 @@ public class TheKeyOAuthClient {
             task.resume()
         }
     }
-    
+
+    public func performActionWithTicket(forService service: String, completion: ((Result<String, Error>) -> Void)?)  {
+        guard isConfigured(), let authState = authState else { completion?(.failure(Error.notConfigured)); return }
+
+        authState.performAction { (token, _, error) in
+            if error != nil { completion?(.failure(error)); return }
+
+            guard let token = token else { completion?(.failure(ApiError.missingAccessToken)); return }
+            guard let request = self.buildTicketRequest(with: token, forService: service) else { completion?(.failure(ApiError.unableToBuildURL)); return }
+
+            let session = URLSession(configuration: .ephemeral)
+            let task = session.dataTask(with: request) { (data, response, error) in
+                if error != nil { completion?(.failure(error)); return }
+
+                do {
+                    if let data = data {
+                        let json = try JSONSerialization.jsonObject(with: data) as? [String: String]
+                        completion?(Result(json?[TheKeyOAuthClient.kParamTicket], failWith: ApiError.invalidApiResponse))
+                        return
+                    }
+                } catch {
+                    completion?(.failure(error))
+                    return
+                }
+
+                completion?(.failure(ApiError.invalidApiResponse))
+                return
+            }
+
+            task.resume()
+        }
+    }
+
     // MARK: Helper functions
 
     private func buildAttributesRequest(with token: String) -> URLRequest? {
-        guard let baseCasURL = baseCasURL else { return nil }
-        
-        let attributesURL = baseCasURL.appendingPathComponent(attributesPath.joined(separator: "/"))
+        guard let attributesURL = buildCasURL(with: TheKeyOAuthClient.kAttributesPath) else { return nil }
+
         var request = URLRequest(url: attributesURL)
         let bearerToken = String(format:TheKeyOAuthClient.kAuthorizationHeaderValue, token)
         
@@ -197,7 +241,26 @@ public class TheKeyOAuthClient {
         
         return request
     }
-    
+
+    private func buildTicketRequest(with token: String, forService service: String) -> URLRequest? {
+        guard let rawTicketURL = buildCasURL(with: TheKeyOAuthClient.kTicketPath) else { return nil }
+        guard let ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
+        let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
+        ticketURL.queryItems = [serviceParam]
+
+        var request = URLRequest(url: ticketURL.url)
+        let bearerToken = String(format: TheKeyOAuthClient.kAuthorizationHeaderValue, token)
+
+        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
+
+        return request
+    }
+
+    private func buildCasURL(with path: String) -> URL? {
+        guard let baseCasURL = baseCasURL else { return nil }
+        return baseCasURL.appendingPathComponent(path)
+    }
+
     private func saveToKeychain(authState: OIDAuthState) {
         let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
         
