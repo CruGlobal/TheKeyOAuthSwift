@@ -15,20 +15,14 @@ public class TheKeyOAuthClient {
 
     private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
     
-    private static let kAttributesPath = "api/oauth/attributes"
-    private static let kTicketPath = "api/oauth/ticket"
     private static let kTokenPath = "api/oauth/token"
     private static let kLoginPath = "login"
-    
-    private static let kAuthorizationHeaderKey = "Authorization"
-    private static let kAuthorizationHeaderValue = "Bearer %@"
-    
-    private static let kParamService = "service"
-    private static let kParamTicket = "ticket"
     
     private static let kbundleUnknown = "org.cru.unknownApp"
     private static let kKeychainName = "%@.thekey.authorization"
     
+    private static let kParamTicket = "ticket"
+
     private static let kGUIDKey = "ssoGuid"
     private static let kEmailKey = "email"
     private static let kgrMasterPersonIdKey = "grMasterPersonId"
@@ -40,8 +34,6 @@ public class TheKeyOAuthClient {
     private var baseCasURL: URL?
 
     private let scopes = ["extended", "fullticket"]
-
-
 
     private var keychainName: String {
         get {
@@ -236,37 +228,11 @@ public class TheKeyOAuthClient {
 
     // MARK: Helper functions
 
-    private func buildAttributesRequest(with token: String) -> URLRequest? {
-        guard let attributesURL = buildCasURL(with: TheKeyOAuthClient.kAttributesPath) else { return nil }
-
-        var request = URLRequest(url: attributesURL)
-        let bearerToken = String(format:TheKeyOAuthClient.kAuthorizationHeaderValue, token)
-        
-        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
-        
-        return request
-    }
-
-    private func buildTicketRequest(with token: String, forService service: String) -> URLRequest? {
-        guard let rawTicketURL = buildCasURL(with: TheKeyOAuthClient.kTicketPath) else { return nil }
-        guard var ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
-        let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
-        ticketURL.queryItems = [serviceParam]
-        guard let urlWIthParams = ticketURL.url else { return nil }
-        
-        var request = URLRequest(url: urlWIthParams)
-        let bearerToken = String(format: TheKeyOAuthClient.kAuthorizationHeaderValue, token)
-
-        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
-
-        return request
-    }
-
-    private func buildCasURL(with path: String) -> URL? {
-        guard let baseCasURL = baseCasURL else { return nil }
+    func buildCasURL(with path: String) -> URL? {
+        guard let baseCasURL = self.baseCasURL else { return nil }
         return baseCasURL.appendingPathComponent(path)
     }
-
+    
     private func saveToKeychain(authState: OIDAuthState) {
         let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
         
@@ -280,5 +246,41 @@ public class TheKeyOAuthClient {
     
     private func fetchAttributes() {
         fetchAttributes(result: nil)
+    }
+}
+
+private extension TheKeyOAuthClient {
+    private static let kAttributesPath = "api/oauth/attributes"
+    private static let kTicketPath = "api/oauth/ticket"
+    
+    private static let kAuthorizationHeaderKey = "Authorization"
+    private static let kAuthorizationHeaderValue = "Bearer %@"
+    
+    private static let kParamService = "service"
+    
+    func buildAttributesRequest(with token: String) -> URLRequest? {
+        guard let attributesURL = buildCasURL(with: TheKeyOAuthClient.kAttributesPath) else { return nil }
+        
+        var request = URLRequest(url: attributesURL)
+        let bearerToken = String(format:TheKeyOAuthClient.kAuthorizationHeaderValue, token)
+        
+        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
+        
+        return request
+    }
+    
+    func buildTicketRequest(with token: String, forService service: String) -> URLRequest? {
+        guard let rawTicketURL = buildCasURL(with: TheKeyOAuthClient.kTicketPath) else { return nil }
+        guard var ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
+        let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
+        ticketURL.queryItems = [serviceParam]
+        guard let urlWIthParams = ticketURL.url else { return nil }
+        
+        var request = URLRequest(url: urlWIthParams)
+        let bearerToken = String(format: TheKeyOAuthClient.kAuthorizationHeaderValue, token)
+        
+        request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
+        
+        return request
     }
 }
