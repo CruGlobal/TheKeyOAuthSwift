@@ -172,7 +172,7 @@ public class TheKeyOAuthClient {
     
     /* Fetches attributes for the logged in user. The user MUST have a valid, non-expired session. The function DOES account
        for refresh tokens. Retrieved attributes will be stored in userAttrs and a copy is returned in the result callback. */
-    public func fetchAttributes(result: (([String: String]?, Error?) -> Void)?) {
+    public func fetchAttributes(result: (([String: String]?, Error?) -> Void)? = nil) {
         guard isConfigured(), let authState = authState else { return }
         
         authState.performAction { (token, _, error) in
@@ -242,10 +242,6 @@ public class TheKeyOAuthClient {
     private func loadAuthStateFromKeychain() {
         guard let authorization = GTMAppAuthFetcherAuthorization.init(fromKeychainForName: keychainName) else { return }
         authState = authorization.authState
-    }
-    
-    private func fetchAttributes() {
-        fetchAttributes(result: nil)
     }
 }
 
