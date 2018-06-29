@@ -13,4 +13,5 @@ Pod::Spec.new do |s|
   s.source_files = 'TheKeyOAuthSwift/Classes/**/*'  
 
   s.dependency 'GTMAppAuth'
+  s.dependency 'Result'
 end
