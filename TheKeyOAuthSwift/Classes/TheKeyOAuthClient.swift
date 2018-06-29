@@ -8,11 +8,12 @@
 
 import Foundation
 import GTMAppAuth
+import Result
 
 public class TheKeyOAuthClient {
     // MARK: Constants
 
-    private static let kDefaultBaseURL = URL("https://thekey.me/cas/")
+    private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
     private static let kAttributesPath = "api/oauth/attributes"
     private static let kTicketPath = "api/oauth/ticket"
     private static let kAuthorizationHeaderKey = "Authorization"
@@ -100,8 +101,8 @@ public class TheKeyOAuthClient {
         self.redirectURI = redirectURI
         self.issuer = issuer
         
-        let authorizationEndpoint: URL = baseCasURL.appendingPathComponent(loginPath.joined(separator: "/"))
-        let tokenEndpoint: URL = baseCasURL.appendingPathComponent(tokenPath.joined(separator: "/"))
+        let authorizationEndpoint = baseCasURL!.appendingPathComponent(loginPath.joined(separator: "/"))
+        let tokenEndpoint = baseCasURL!.appendingPathComponent(tokenPath.joined(separator: "/"))
         
         configuration = OIDServiceConfiguration(
             authorizationEndpoint: authorizationEndpoint,
@@ -197,31 +198,31 @@ public class TheKeyOAuthClient {
         }
     }
 
-    public func performActionWithTicket(forService service: String, completion: ((Result<String, Error>) -> Void)?)  {
-        guard isConfigured(), let authState = authState else { completion?(.failure(Error.notConfigured)); return }
+    public func performActionWithTicket(forService service: String, completion: ((Result<String, AnyError>) -> Void)?)  {
+        guard isConfigured(), let authState = authState else { completion?(.failure(AnyError(ApiError.notConfigured))); return }
 
         authState.performAction { (token, _, error) in
-            if error != nil { completion?(.failure(error)); return }
+            if let error = error { completion?(.failure(AnyError(error))); return }
 
-            guard let token = token else { completion?(.failure(ApiError.missingAccessToken)); return }
-            guard let request = self.buildTicketRequest(with: token, forService: service) else { completion?(.failure(ApiError.unableToBuildURL)); return }
+            guard let token = token else { completion?(.failure(AnyError(ApiError.missingAccessToken))); return }
+            guard let request = self.buildTicketRequest(with: token, forService: service) else { completion?(.failure(AnyError(ApiError.unableToBuildURL))); return }
 
             let session = URLSession(configuration: .ephemeral)
             let task = session.dataTask(with: request) { (data, response, error) in
-                if error != nil { completion?(.failure(error)); return }
+                if let error = error { completion?(.failure(AnyError(error))); return }
 
                 do {
                     if let data = data {
                         let json = try JSONSerialization.jsonObject(with: data) as? [String: String]
-                        completion?(Result(json?[TheKeyOAuthClient.kParamTicket], failWith: ApiError.invalidApiResponse))
+                        completion?(Result(json?[TheKeyOAuthClient.kParamTicket], failWith: AnyError(ApiError.invalidApiResponse)))
                         return
                     }
                 } catch {
-                    completion?(.failure(error))
+                    completion?(.failure(AnyError(error)))
                     return
                 }
 
-                completion?(.failure(ApiError.invalidApiResponse))
+                completion?(.failure(AnyError(ApiError.invalidApiResponse)))
                 return
             }
 
@@ -244,11 +245,12 @@ public class TheKeyOAuthClient {
 
     private func buildTicketRequest(with token: String, forService service: String) -> URLRequest? {
         guard let rawTicketURL = buildCasURL(with: TheKeyOAuthClient.kTicketPath) else { return nil }
-        guard let ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
+        guard var ticketURL = URLComponents(url: rawTicketURL, resolvingAgainstBaseURL: false) else { return nil }
         let serviceParam = URLQueryItem(name: TheKeyOAuthClient.kParamService, value: service)
         ticketURL.queryItems = [serviceParam]
-
-        var request = URLRequest(url: ticketURL.url)
+        guard let urlWIthParams = ticketURL.url else { return nil }
+        
+        var request = URLRequest(url: urlWIthParams)
         let bearerToken = String(format: TheKeyOAuthClient.kAuthorizationHeaderValue, token)
 
         request.setValue(bearerToken, forHTTPHeaderField: TheKeyOAuthClient.kAuthorizationHeaderKey)
