@@ -12,7 +12,7 @@ import GTMAppAuth
 public class TheKeyOAuthClient {
     // MARK: Constants
 
-    private static let kDefaultBaseURL = URL("https://thekey.me/cas/")
+    private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")!
     private static let kAttributesPath = "api/oauth/attributes"
     private static let kTicketPath = "api/oauth/ticket"
     private static let kAuthorizationHeaderKey = "Authorization"
