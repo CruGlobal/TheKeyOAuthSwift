@@ -136,7 +136,7 @@ public class TheKeyOAuthClient {
        If authorization is successful, then the client will persist the authorization to the keychain and fetch attributes for the user
        and store them in userAttrs. */
     public func initiateAuthorization(requestingViewController: UIViewController, additionalParameters: [String: String]? = nil,
-                                      callback: @escaping ((Error) -> Void)? = nil) -> OIDAuthorizationFlowSession? {
+                                      callback: ((Error) -> Void)? = nil) -> OIDAuthorizationFlowSession? {
         guard isConfigured(), let clientID = clientID, let redirectURI = redirectURI, let configuration = configuration else { return nil }
         
         let request = OIDAuthorizationRequest(configuration: configuration,
