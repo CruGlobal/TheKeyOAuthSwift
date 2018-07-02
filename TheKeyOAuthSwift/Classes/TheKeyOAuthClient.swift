@@ -10,7 +10,7 @@ import Foundation
 import GTMAppAuth
 import Result
 
-public class TheKeyOAuthClient {
+public class TheKeyOAuthClient: NSObject {
     // MARK: Constants
 
     private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
@@ -149,6 +149,7 @@ public class TheKeyOAuthClient {
             
             self.authState = authState
             self.updateStoredAuthState()
+            self.authState?.stateChangeDelegate = self
             self.fetchAttributes()
         }
         
@@ -168,7 +169,6 @@ public class TheKeyOAuthClient {
         guard isConfigured(), let authState = authState else { return }
         
         authState.performAction { (token, _, error) in
-            self.updateStoredAuthState()
             if error != nil { result?(nil, error); return }
             guard let token = token else { return }
             guard let request = self.buildAttributesRequest(with: token) else { return }
@@ -191,7 +191,6 @@ public class TheKeyOAuthClient {
         guard isConfigured(), let authState = authState else { completion?(.failure(AnyError(ApiError.notConfigured))); return }
 
         authState.performAction { (token, _, error) in
-            self.updateStoredAuthState()
             if let error = error { completion?(.failure(AnyError(error))); return }
 
             guard let token = token else { completion?(.failure(AnyError(ApiError.missingAccessToken))); return }
@@ -230,6 +229,7 @@ public class TheKeyOAuthClient {
     private func loadAuthStateFromKeychain() {
         guard let authorization = GTMAppAuthFetcherAuthorization.init(fromKeychainForName: keychainName) else { return }
         authState = authorization.authState
+        authState?.stateChangeDelegate = self
     }
 
     private func updateStoredAuthState() {
@@ -238,7 +238,16 @@ public class TheKeyOAuthClient {
             GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
         } else {
             GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: keychainName)
+            self.authState = nil
+            self.userAttrs = nil
         }
+    }
+}
+
+//MARK: OIDAuthState Delegate
+extension TheKeyOAuthClient: OIDAuthStateChangeDelegate {
+    public func didChange(_ state: OIDAuthState) {
+        updateStoredAuthState()
     }
 }
 
