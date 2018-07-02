@@ -65,7 +65,7 @@ public class TheKeyOAuthClient {
     
     public var userAttributes: [String: String]? {
         get {
-            guard isConfigured(), isAuthenticated(at: Date()) else { userAttrs = nil; return nil }
+            guard isConfigured(), isAuthenticated() else { userAttrs = nil; return nil }
             return userAttrs
         }
     }
@@ -114,21 +114,13 @@ public class TheKeyOAuthClient {
     /* Returns true if there is a valid authState, which may be loaded from the Keychain, and that authState has an
        access token that has not expired. This function initiates a token refresh, but will still return false because
        of the asynchronous nature of the refresh call. */
-    public func isAuthenticated(at currentDateTime: Date = Date()) -> Bool {
+    public func isAuthenticated() -> Bool {
         if authState == nil {
             loadAuthStateFromKeychain()
         }
-        
-        guard let authState = authState else { return false }
-        
-        if let accessTokenExpirationDate = authState.lastTokenResponse?.accessTokenExpirationDate,
-            accessTokenExpirationDate.compare(currentDateTime) == .orderedDescending {
-            return true
-        }
-        
-        authState.performAction { (_,_,_) in /* no op */}
-        
-        return false
+
+        guard let authorized = authState?.isAuthorized else { return false }
+        return authorized
     }
     
     /* This function initiates an authorization flow by presenting a SFSafariViewController returning an Authorization Session
