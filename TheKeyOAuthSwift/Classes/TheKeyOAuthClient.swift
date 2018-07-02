@@ -156,7 +156,7 @@ public class TheKeyOAuthClient {
             guard let authState = authState else { return }
             
             self.authState = authState
-            self.saveToKeychain(authState: authState)
+            self.updateStoredAuthState()
             self.fetchAttributes()
         }
         
@@ -167,7 +167,7 @@ public class TheKeyOAuthClient {
     public func logout() {
         userAttrs = nil
         authState = nil
-        GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: keychainName)
+        self.updateStoredAuthState()
     }
     
     /* Fetches attributes for the logged in user. The user MUST have a valid, non-expired session. The function DOES account
@@ -176,6 +176,7 @@ public class TheKeyOAuthClient {
         guard isConfigured(), let authState = authState else { return }
         
         authState.performAction { (token, _, error) in
+            self.updateStoredAuthState()
             if error != nil { result?(nil, error); return }
             guard let token = token else { return }
             guard let request = self.buildAttributesRequest(with: token) else { return }
@@ -198,6 +199,7 @@ public class TheKeyOAuthClient {
         guard isConfigured(), let authState = authState else { completion?(.failure(AnyError(ApiError.notConfigured))); return }
 
         authState.performAction { (token, _, error) in
+            self.updateStoredAuthState()
             if let error = error { completion?(.failure(AnyError(error))); return }
 
             guard let token = token else { completion?(.failure(AnyError(ApiError.missingAccessToken))); return }
@@ -232,16 +234,19 @@ public class TheKeyOAuthClient {
         guard let baseCasURL = self.baseCasURL else { return nil }
         return baseCasURL.appendingPathComponent(path)
     }
-    
-    private func saveToKeychain(authState: OIDAuthState) {
-        let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
-        
-        GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
-    }
-    
+
     private func loadAuthStateFromKeychain() {
         guard let authorization = GTMAppAuthFetcherAuthorization.init(fromKeychainForName: keychainName) else { return }
         authState = authorization.authState
+    }
+
+    private func updateStoredAuthState() {
+        if let authState = authState, authState.isAuthorized {
+            let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
+            GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
+        } else {
+            GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: keychainName)
+        }
     }
 }
 
