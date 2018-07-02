@@ -135,7 +135,7 @@ public class TheKeyOAuthClient {
        that the caller should set in the AppDelegate to handle the redirect that will be sent after a successful authorization.
        If authorization is successful, then the client will persist the authorization to the keychain and fetch attributes for the user
        and store them in userAttrs. */
-    public func initiateAuthorization(requestingViewController: UIViewController, additionalParameters: [String: String]? = nil
+    public func initiateAuthorization(requestingViewController: UIViewController, additionalParameters: [String: String]? = nil,
                                       callback: @escaping ((Error) -> Void)? = nil) -> OIDAuthorizationFlowSession? {
         guard isConfigured(), let clientID = clientID, let redirectURI = redirectURI, let configuration = configuration else { return nil }
         
@@ -145,7 +145,7 @@ public class TheKeyOAuthClient {
                                               scopes: scopes,
                                               redirectURL: redirectURI,
                                               responseType: OIDResponseTypeCode,
-                                              additionalParameters: additionalParameters?)
+                                              additionalParameters: additionalParameters)
         
         let authSession = OIDAuthState.authState(byPresenting: request, presenting: requestingViewController) { authState, error in
             if let error = error {
