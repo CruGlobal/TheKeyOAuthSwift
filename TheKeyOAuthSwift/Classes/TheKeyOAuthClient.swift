@@ -119,8 +119,7 @@ public class TheKeyOAuthClient: NSObject {
             loadAuthStateFromKeychain()
         }
 
-        guard let authorized = authState?.isAuthorized else { return false }
-        return authorized
+        return authState?.isAuthorized ?? false
     }
     
     /* This function initiates an authorization flow by presenting a SFSafariViewController returning an Authorization Session
