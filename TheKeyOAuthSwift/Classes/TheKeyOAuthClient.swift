@@ -104,6 +104,7 @@ public class TheKeyOAuthClient: NSObject {
             authorizationEndpoint: authorizationEndpoint,
             tokenEndpoint: tokenEndpoint
         )
+        loadAuthStateFromKeychain()
     }
     /* Returns true if the client is configured with the values necessary interact with TheKey.
        It is a safe assumption that if configure() is called then this function will return true. */
@@ -111,14 +112,8 @@ public class TheKeyOAuthClient: NSObject {
         return configuration != nil && baseCasURL != nil && clientID != nil && redirectURI != nil
     }
     
-    /* Returns true if there is a valid authState, which may be loaded from the Keychain, and that authState has an
-       access token that has not expired. This function initiates a token refresh, but will still return false because
-       of the asynchronous nature of the refresh call. */
+    /* Returns true if there is a valid authState, which may be loaded from the Keychain. */
     public func isAuthenticated() -> Bool {
-        if authState == nil {
-            loadAuthStateFromKeychain()
-        }
-
         return authState?.isAuthorized ?? false
     }
     
