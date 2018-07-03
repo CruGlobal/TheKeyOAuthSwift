@@ -11,14 +11,13 @@ PODS:
   - Nimble (7.0.3)
   - Quick (1.2.0)
   - Result (4.0.0)
-  - TheKeyOAuthSwift (0.4.0):
+  - TheKeyOAuthSwift (0.5.2):
     - GTMAppAuth
+    - Result
 
 DEPENDENCIES:
-  - GTMAppAuth
   - Nimble (~> 7.0.2)
   - Quick (~> 1.2.0)
-  - Result
   - TheKeyOAuthSwift (from `../`)
 
 SPEC REPOS:
@@ -41,8 +40,8 @@ SPEC CHECKSUMS:
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   Result: 7645bb3f50c2ce726dd0ff2fa7b6f42bbe6c3713
-  TheKeyOAuthSwift: 59cbf9d7de4d6a4bde5e202a2dc82fc7aff3787c
+  TheKeyOAuthSwift: b6ba8bad80b77d5d418904d2ddddf1c8321836de
 
-PODFILE CHECKSUM: c1dd4d8b6dde38d6b72d6f6548375b12ad936eea
+PODFILE CHECKSUM: 95d3f556348d02d324d3e3d4fa9d5de5334e071f
 
 COCOAPODS: 1.5.3

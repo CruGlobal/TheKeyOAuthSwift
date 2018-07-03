@@ -10,7 +10,7 @@ import Foundation
 import GTMAppAuth
 import Result
 
-public class TheKeyOAuthClient {
+public class TheKeyOAuthClient: NSObject {
     // MARK: Constants
 
     private static let kDefaultBaseURL = URL(string: "https://thekey.me/cas/")
@@ -65,7 +65,7 @@ public class TheKeyOAuthClient {
     
     public var userAttributes: [String: String]? {
         get {
-            guard isConfigured(), isAuthenticated(at: Date()) else { userAttrs = nil; return nil }
+            guard isConfigured(), isAuthenticated() else { userAttrs = nil; return nil }
             return userAttrs
         }
     }
@@ -104,6 +104,7 @@ public class TheKeyOAuthClient {
             authorizationEndpoint: authorizationEndpoint,
             tokenEndpoint: tokenEndpoint
         )
+        loadAuthStateFromKeychain()
     }
     /* Returns true if the client is configured with the values necessary interact with TheKey.
        It is a safe assumption that if configure() is called then this function will return true. */
@@ -111,24 +112,9 @@ public class TheKeyOAuthClient {
         return configuration != nil && baseCasURL != nil && clientID != nil && redirectURI != nil
     }
     
-    /* Returns true if there is a valid authState, which may be loaded from the Keychain, and that authState has an
-       access token that has not expired. This function initiates a token refresh, but will still return false because
-       of the asynchronous nature of the refresh call. */
-    public func isAuthenticated(at currentDateTime: Date = Date()) -> Bool {
-        if authState == nil {
-            loadAuthStateFromKeychain()
-        }
-        
-        guard let authState = authState else { return false }
-        
-        if let accessTokenExpirationDate = authState.lastTokenResponse?.accessTokenExpirationDate,
-            accessTokenExpirationDate.compare(currentDateTime) == .orderedDescending {
-            return true
-        }
-        
-        authState.performAction { (_,_,_) in /* no op */}
-        
-        return false
+    /* Returns true if there is a valid authState, which may be loaded from the Keychain. */
+    public func isAuthenticated() -> Bool {
+        return authState?.isAuthorized ?? false
     }
     
     /* This function initiates an authorization flow by presenting a SFSafariViewController returning an Authorization Session
@@ -156,7 +142,8 @@ public class TheKeyOAuthClient {
             guard let authState = authState else { return }
             
             self.authState = authState
-            self.saveToKeychain(authState: authState)
+            self.updateStoredAuthState()
+            self.authState?.stateChangeDelegate = self
             self.fetchAttributes()
         }
         
@@ -167,7 +154,7 @@ public class TheKeyOAuthClient {
     public func logout() {
         userAttrs = nil
         authState = nil
-        GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: keychainName)
+        self.updateStoredAuthState()
     }
     
     /* Fetches attributes for the logged in user. The user MUST have a valid, non-expired session. The function DOES account
@@ -232,16 +219,29 @@ public class TheKeyOAuthClient {
         guard let baseCasURL = self.baseCasURL else { return nil }
         return baseCasURL.appendingPathComponent(path)
     }
-    
-    private func saveToKeychain(authState: OIDAuthState) {
-        let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
-        
-        GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
-    }
-    
+
     private func loadAuthStateFromKeychain() {
         guard let authorization = GTMAppAuthFetcherAuthorization.init(fromKeychainForName: keychainName) else { return }
         authState = authorization.authState
+        authState?.stateChangeDelegate = self
+    }
+
+    private func updateStoredAuthState() {
+        if let authState = authState, authState.isAuthorized {
+            let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
+            GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
+        } else {
+            GTMAppAuthFetcherAuthorization.removeFromKeychain(forName: keychainName)
+            self.authState = nil
+            self.userAttrs = nil
+        }
+    }
+}
+
+//MARK: OIDAuthState Delegate
+extension TheKeyOAuthClient: OIDAuthStateChangeDelegate {
+    public func didChange(_ state: OIDAuthState) {
+        updateStoredAuthState()
     }
 }
 
