@@ -9,6 +9,7 @@
 import Foundation
 import GTMAppAuth
 import Result
+import Weak
 
 public class TheKeyOAuthClient: NSObject {
     // MARK: Constants
@@ -47,6 +48,8 @@ public class TheKeyOAuthClient: NSObject {
     
     private var authState: OIDAuthState?
     private var configuration: OIDServiceConfiguration?
+
+    private var stateChangeDelegates = [Weak<OIDAuthStateChangeDelegate>]()
 
     // MARK: Errors we can throw/return
 
@@ -242,6 +245,20 @@ public class TheKeyOAuthClient: NSObject {
 extension TheKeyOAuthClient: OIDAuthStateChangeDelegate {
     public func didChange(_ state: OIDAuthState) {
         updateStoredAuthState()
+
+        compactDelegates()
+        for delegate in stateChangeDelegates {
+            delegate.object?.didChange(state)
+        }
+    }
+
+    public func addStateChangeDelegate(delegate: OIDAuthStateChangeDelegate) {
+        stateChangeDelegates.append(Weak(delegate))
+        compactDelegates()
+    }
+
+    private func compactDelegates() {
+        stateChangeDelegates = stateChangeDelegates.filter { $0.object != nil }
     }
 }
 
