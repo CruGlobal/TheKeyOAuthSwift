@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'TheKeyOAuthSwift'
-  s.version          = '0.5.3'
+  s.version          = '0.5.4'
   s.summary          = 'Swift Library for TheKey OAuth based off AppAuth'
 
   s.homepage         = 'https://github.com/CruGlobal/TheKeyOAuthSwift'
