@@ -14,8 +14,6 @@ PODS:
   - TheKeyOAuthSwift (0.5.2):
     - GTMAppAuth
     - Result
-    - Weak
-  - Weak (1.0.0)
 
 DEPENDENCIES:
   - Nimble (~> 7.0.2)
@@ -30,7 +28,6 @@ SPEC REPOS:
     - Nimble
     - Quick
     - Result
-    - Weak
 
 EXTERNAL SOURCES:
   TheKeyOAuthSwift:
@@ -43,8 +40,7 @@ SPEC CHECKSUMS:
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   Result: 7645bb3f50c2ce726dd0ff2fa7b6f42bbe6c3713
-  TheKeyOAuthSwift: 6b9b2b55f427cd3cfbdc1784ab9647a026198b2d
-  Weak: 5b7a03ba36275b5075ee152841d97d4b225eabde
+  TheKeyOAuthSwift: b6ba8bad80b77d5d418904d2ddddf1c8321836de
 
 PODFILE CHECKSUM: 95d3f556348d02d324d3e3d4fa9d5de5334e071f
 

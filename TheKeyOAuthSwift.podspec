@@ -14,5 +14,4 @@ Pod::Spec.new do |s|
 
   s.dependency 'GTMAppAuth'
   s.dependency 'Result'
-  s.dependency 'Weak'
 end

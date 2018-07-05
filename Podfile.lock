@@ -9,12 +9,10 @@ PODS:
   - GTMSessionFetcher/Full (1.1.15):
     - GTMSessionFetcher/Core (= 1.1.15)
   - Result (4.0.0)
-  - Weak (1.0.0)
 
 DEPENDENCIES:
   - GTMAppAuth
   - Result (~> 4.0.0)
-  - Weak (~> 1.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -22,15 +20,13 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - Result
-    - Weak
 
 SPEC CHECKSUMS:
   AppAuth: 3f4f1d6d85ad631d0bbf15ffcdc10c447face97a
   GTMAppAuth: 8d724be29ab8f2f6d35b2bf929d76340c9d1f1b1
   GTMSessionFetcher: 5fa5b80fd20e439ef5f545fb2cb3ca6c6714caa2
   Result: 7645bb3f50c2ce726dd0ff2fa7b6f42bbe6c3713
-  Weak: 5b7a03ba36275b5075ee152841d97d4b225eabde
 
-PODFILE CHECKSUM: 57245eb28a529993559932540169e6288c69fb37
+PODFILE CHECKSUM: a1a941dc062428f8629c7e097cfc265ae9dc90a8
 
 COCOAPODS: 1.5.3
