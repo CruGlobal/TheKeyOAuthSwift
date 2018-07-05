@@ -48,7 +48,7 @@ public class TheKeyOAuthClient: NSObject {
     private var authState: OIDAuthState?
     private var configuration: OIDServiceConfiguration?
 
-    private var stateChangeDelegates = [WeakRef<OIDAuthStateChangeDelegate>]()
+    fileprivate var stateChangeDelegates = [WeakRef<OIDAuthStateChangeDelegate>]()
 
     // MARK: Errors we can throw/return
 
