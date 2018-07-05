@@ -228,7 +228,7 @@ public class TheKeyOAuthClient: NSObject {
         authState?.stateChangeDelegate = self
     }
 
-    private func updateStoredAuthState() {
+    fileprivate func updateStoredAuthState() {
         if let authState = authState, authState.isAuthorized {
             let authorization = GTMAppAuthFetcherAuthorization(authState: authState)
             GTMAppAuthFetcherAuthorization.save(authorization, toKeychainForName: self.keychainName)
