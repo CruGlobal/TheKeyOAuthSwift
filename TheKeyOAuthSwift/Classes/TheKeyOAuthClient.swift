@@ -48,7 +48,7 @@ public class TheKeyOAuthClient: NSObject {
     private var authState: OIDAuthState?
     private var configuration: OIDServiceConfiguration?
 
-    private var stateChangeDelegates = [OIDAuthStateChangeDelegate?]()
+    private var stateChangeDelegates = [WeakRef<OIDAuthStateChangeDelegate>]()
 
     // MARK: Errors we can throw/return
 
@@ -247,18 +247,17 @@ extension TheKeyOAuthClient: OIDAuthStateChangeDelegate {
 
         compactDelegates()
         for delegate in stateChangeDelegates {
-            delegate?.didChange(state)
+            delegate.value?.didChange(state)
         }
     }
 
     public func addStateChangeDelegate(delegate: OIDAuthStateChangeDelegate) {
-        weak var weakDelegate = delegate
-        stateChangeDelegates.append(weakDelegate)
+        stateChangeDelegates.append(WeakRef(value: delegate))
         compactDelegates()
     }
 
     private func compactDelegates() {
-        stateChangeDelegates = stateChangeDelegates.filter { $0 != nil }
+        stateChangeDelegates = stateChangeDelegates.filter { $0.value != nil }
     }
 }
 

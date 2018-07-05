@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4FA41A5920EEC11D00A5F449 /* WeakRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FA41A5820EEC11D00A5F449 /* WeakRef.swift */; };
 		4FD8263220E14154009F32EE /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 4FD8262A20E14154009F32EE /* .gitkeep */; };
 		4FD8263420E14154009F32EE /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 4FD8263120E14154009F32EE /* .gitkeep */; };
 		4FD8263820E14185009F32EE /* TheKeyOAuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */; };
@@ -33,6 +34,7 @@
 /* Begin PBXFileReference section */
 		44CBB2F28BDA28DD18A3B170 /* Pods-TheKeyOAuthSwift_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Example/Pods-TheKeyOAuthSwift_Example.release.xcconfig"; sourceTree = "<group>"; };
 		4883C22D3A37477C7E2904B8 /* Pods-TheKeyOAuthSwift_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TheKeyOAuthSwift_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TheKeyOAuthSwift_Tests/Pods-TheKeyOAuthSwift_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		4FA41A5820EEC11D00A5F449 /* WeakRef.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakRef.swift; sourceTree = "<group>"; };
 		4FD8262A20E14154009F32EE /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		4FD8263120E14154009F32EE /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheKeyOAuthClient.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 			children = (
 				4FD8262A20E14154009F32EE /* .gitkeep */,
 				4FD8263720E14185009F32EE /* TheKeyOAuthClient.swift */,
+				4FA41A5820EEC11D00A5F449 /* WeakRef.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				4FA41A5920EEC11D00A5F449 /* WeakRef.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				4FD8263820E14185009F32EE /* TheKeyOAuthClient.swift in Sources */,
 			);
