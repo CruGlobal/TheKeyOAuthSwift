@@ -11,7 +11,7 @@ PODS:
   - Nimble (7.0.3)
   - Quick (1.2.0)
   - Result (4.0.0)
-  - TheKeyOAuthSwift (0.5.2):
+  - TheKeyOAuthSwift (0.5.4):
     - GTMAppAuth
     - Result
 
@@ -40,7 +40,7 @@ SPEC CHECKSUMS:
   Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
   Result: 7645bb3f50c2ce726dd0ff2fa7b6f42bbe6c3713
-  TheKeyOAuthSwift: b6ba8bad80b77d5d418904d2ddddf1c8321836de
+  TheKeyOAuthSwift: f771f369fda26ef7d72d5b5663e8527f72674310
 
 PODFILE CHECKSUM: 95d3f556348d02d324d3e3d4fa9d5de5334e071f
 
