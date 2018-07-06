@@ -144,8 +144,8 @@ public class TheKeyOAuthClient: NSObject {
             guard let authState = authState else { return }
             
             self.authState = authState
-            self.updateStoredAuthState()
             self.authState?.stateChangeDelegate = self
+            self.didChange(authState)
             self.fetchAttributes()
         }
         
